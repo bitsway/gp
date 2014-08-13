@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!-- Designed and developed by Business Solution Apps team v -->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Grameenphone</title>
+        
+        <link rel="stylesheet" href="static/my.css"  />
+		
+		<link rel="stylesheet" href="static/themes/c.min.css" />
+		<link rel="stylesheet" href="static/themes/jquery.mobile.icons.min.css" />
+        
+        <link rel="stylesheet" href="static/jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.css" />
+        <script src="static/jquery/1.10.2/jquery-1.10.2.min.js">   </script>
+        <script src="static/jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.js">   </script>
+		<script src="static/survey.js">  </script>
+		
+        <style>
+		/*.ui-content{ background-color:#484848}*/
+				.custom-size-flipswitch.ui-flipswitch .ui-btn.ui-flipswitch-on {
+			text-indent: -5.9em;
+		}
+		.custom-size-flipswitch.ui-flipswitch .ui-flipswitch-off {
+			text-indent: 0.5em;
+		}
+		/* Custom widths are needed because the length of custom labels differs from
+		   the length of the standard labels */
+		.custom-size-flipswitch.ui-flipswitch {
+			width: 8.875em;
+		}
+		.custom-size-flipswitch.ui-flipswitch.ui-flipswitch-active {
+			padding-left: 7em;
+			width: 1.875em;
+		}
+		@media (min-width: 28em) {
+			// Repeated from rule .ui-flipswitch above
+			.ui-field-contain > label + .custom-size-flipswitch.ui-flipswitch {
+				width: 1.875em;
+			}
+		}
+		input[type=number],input[type=text]{ background-color:#F4FFFF;}
+		
+		.full-width-slider input {
+			display: none;
+			
+		}
+		.full-width-slider .ui-slider-track {
+			margin-left: 15px;
+			
+		}
+	</style>
+   
+   <script>     
+    $(document).ready(function(){
+				$("#login_image").hide();
+				$('#loader').hide();
+				
+				$("#client_org_others_id").hide();
+				$("#visit_type_others_id").hide();
+				
+   				first_page();
+				
+				$("#client_org_div_id").html(localStorage.clientListShow);
+				$("#rpt_client_org_div_id").html(localStorage.clientListShowReport);
+				
+				$("#visit_type_div_id").html(localStorage.visitTypeListShow);
+				
+				
+				//$('#client_org_div_id').empty();
+				//$('#client_org_div_id').append(clientListShow).trigger('create');
+				
+				//$('#visit_type_div_id').empty();
+				//$('#visit_type_div_id').append(visitTypeListShow).trigger('create');
+				
+				$("#client_org_others_id").val("");
+				$("#visit_type_others_id").val("");
+				$("#remarks_id").val("");
+				
+			  //================
+  				
+		});    
+	
+	function checkOthersComp(){
+				var clientOrgValue=$("#client_org_id").val();
+				if (clientOrgValue=='Others'){
+					$("#client_org_others_id").show();
+				}else{
+					$("#client_org_others_id").hide();
+					$("#client_org_others_id").val("");
+					}
+		}; 
+	function checkOthersVisitType(){
+				var visitTypeValue=$("#visit_type_id").val();
+				if (visitTypeValue=='Others'){
+					$("#visit_type_others_id").show();
+				}else{
+					$("#visit_type_others_id").hide();
+					$("#visit_type_others_id").val("");
+					}
+		}; 
+	
+	</script>	
+  
+    </head>
+    
+
+    <body>  
+    
+     <!--======================Menu page start==================-->        
+        <div data-theme="c" data-role="page" id="menuPage"   >
+           <div data-role="panel" id="routePanel" data-display="overlay" style="width:60%; background-color:#FFF">
+				<!-- panel content goes here unilogo1.jpg-->
+				<img style="width:100%;"  src="logo_gp.png" alt="GP" /><br>
+				<font style="color:#007D7D; font-size:25px;">Grameenphone</font>
+				<br><br><br><br>
+				<ul data-role="listview">
+                    <div style="background:#008A8A; height:1px"></div>
+                    <li><a onClick="get_report()" href="#">Reports</a></li>
+                    <div style="background:#008A8A; height:1px"></div>
+                    <br><br><br>
+                    
+                    <div style="background:#008A8A; height:1px"></div>
+                    <li><a href="#login" >Sync Authorization</a></li> 
+                    <div style="background:#008A8A; height:1px"></div>
+                    <li><a onClick="clear_autho()" href="#login">Clear Authorization</a></li>
+                    <div style="background:#008A8A; height:1px"></div>
+                    
+                </ul>
+                
+				<div style="margin:100%;"></div>
+				<!--<img src="logo_gp.png" alt="Grameen Phone" />-->
+				
+			</div><!-- /panel -->
+            
+            <div data-theme="c" data-role="header" data-position="fixed" >
+			    <a  data-role="button" href="#routePanel" class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>
+                <h3>Visit Report</h3>
+                
+            </div>
+            
+			<div  data-role="content" >
+            	
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                       <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Today" id="radio_1">Today</label>                                 
+                    </div>
+                    <div class="ui-block-b">
+                         <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Yesterday" id="radio_2">Y.</label>            
+                    </div>
+                    <div class="ui-block-c">
+                         <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="DBYesterday" id="radio_3">D.B.Y.</label>                                               
+                    </div>                    
+                </div>	
+                <br>
+				
+                <div>	
+                
+                <div id="client_org_div_id"></div>
+				<input type="text" name="client_org_others" id="client_org_others_id" placeholder="Others Organization" style="height:auto;" value="">
+                
+                <div id="visit_type_div_id"></div>
+                
+                <input type="text" name="visit_type_others" id="visit_type_others_id" placeholder="Others Visit Type" style="height:auto;" value="">
+                
+                <textarea type="text" name="remarks" id="remarks_id" placeholder="Remarks" value=""></textarea>
+                 
+                 <input type="hidden" name="lat" id="lat" placesholder="" value="">
+			     <input type="hidden" name="long" id="long" placeholder="" value="">
+                 </div>	
+                </br>
+                </br>
+                
+        		<a id="sub_button" data-role="button" onClick="getlocationand_askhelp(); submit_data()" >Submit</a>
+				                
+            	<div id="submit_data" style="color:#F03"></div>
+            
+              <div id="dataerror" style="color:#FF0; font-family:Arial, Helvetica, sans-serif; text-decoration:none; font-size:12px; font-style:normal; font-weight:lighter; text-shadow:none"  align="center"> </div>
+                <br/><br/>
+                <br/><br/><br/>
+	  		</div>
+            
+            
+        </div>
+    
+      <!--  ================= login page=================  -->        
+        <div data-theme="c" data-role="page" id="login"   >
+            <div data-theme="c" data-role="header" data-position="fixed" >
+			   <a   href="#" ><img src="logo_gp_mn.jpg"></a>
+               <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>
+                <h3>Login</h3>
+            </div>
+			
+			<div data-role="content" align="center">
+				<font color="#CCFFCC" face="Arial, Helvetica, sans-serif" size="-1">                         
+				<input type="text" name="cm_id" id="cm_id" placeholder="Rep ID" value="">
+				<input type="text" name="cm_pass" id="cm_pass" placeholder="Rep Pass" value="">
+                </font>                
+				</br></br>	
+				
+                <div id="login_image" ><img height="40px" width="40px" src="loading.gif"></div>
+                <a id="loginButton" data-role="button"  onClick="check_user()" >Sync</a>				
+				<div id="error_login"></div>
+					   
+            </div>
+			
+        </div><!--/login page-->
+   
+    
+     <!-- ============================ SUCCESS MESSAGE============================-->     
+    <div data-theme="c" data-role="page" id="endPage">
+		    <div data-theme="c" data-role="header" data-position="fixed" >
+			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+                <h3>Success</h3>
+            </div>
+		    
+			<div  data-role="content" >
+               	<div >Submitted Successfully</div>
+                
+                </br>
+                </br>
+        		<a id="sub_button" data-role="button" onClick="getMenuPage()" >New Visit</a>
+				
+              <div id="dataerror" style="color:#FF0; font-family:Arial, Helvetica, sans-serif; text-decoration:none; font-size:12px; font-style:normal; font-weight:lighter; text-shadow:none"  align="center"> </div>
+                <br/><br/>
+                <br/><br/><br/>
+	  		</div>
+	</div>
+      
+    <!-- ============================ Report ============================-->     
+    <div data-theme="c" data-role="page" id="report_page">
+		    <div data-theme="c" data-role="header" data-position="fixed" >
+			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+                <h3>Reports</h3>
+            </div>
+		    
+			<div  data-role="content" >
+            	
+               	<div id="rpt_client_org_div_id"></div>                
+        		<a id="sub_button" data-role="button" onClick="getLastFiveVisit()" >Last 5 Visit</a>
+				
+                
+                </br>
+        		
+                <div id="report_message" style="color:#F03;"></div>
+                
+                <div id="loader" style="text-align:center;"><img src="running.gif"/></div>
+                
+                <br/>                
+                <div id="report_data"></div>
+                
+                <br/>
+                <br/>
+	  		</div>
+	</div>
+    
+    <!--=====================wait page end=========================-->  
+    
+    
+ <script type="text/javascript" src="phonegap.js"></script>
+ 
+ 
+ 
+    </body>
+</html>
