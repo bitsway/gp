@@ -53,29 +53,25 @@
    
    <script>     
     $(document).ready(function(){
+				
 				$("#login_image").hide();
 				$('#loader').hide();
+				$('#summary_loader').hide();
 				
 				$("#client_org_others_id").hide();
 				$("#visit_type_others_id").hide();
 				
-   				first_page();
+				first_page();
+				addClientList();				
+				addVisitTypeList();				
 				
-				$("#client_org_div_id").html(localStorage.clientListShow);
-				$("#rpt_client_org_div_id").html(localStorage.clientListShowReport);
-				
-				$("#visit_type_div_id").html(localStorage.visitTypeListShow);
-				
-				
-				//$('#client_org_div_id').empty();
-				//$('#client_org_div_id').append(clientListShow).trigger('create');
-				
-				//$('#visit_type_div_id').empty();
-				//$('#visit_type_div_id').append(visitTypeListShow).trigger('create');
-				
+				$("#rpt_rep_div_id").html(localStorage.repListShowReport);
+								
 				$("#client_org_others_id").val("");
 				$("#visit_type_others_id").val("");
 				$("#remarks_id").val("");
+				
+				
 				
 			  //================
   				
@@ -102,6 +98,94 @@
 	
 	</script>	
   
+  <!--==============client/org select===========-->
+	<script>
+	$.mobile.document.on( "listviewcreate", "#client_org_id-menu", function( e ) {
+        var input,
+            listbox = $( "#client_org_id-listbox" ),
+            form = listbox.jqmData( "filter-form" ),
+            listview = $( e.target );
+        if ( !form ) {
+            input = $( "<input id='clientSearch' data-type='search'></input>" );
+            form = $( "<form></form>" ).append( input );
+            input.textinput();
+            $( "#client_org_id-listbox" )
+                .prepend( form )
+                .jqmData( "filter-form", form );
+        }
+        listview.filterable({ input: input });
+    })
+    .on( "pagebeforeshow pagehide", "#client_org_id-dialog", function( e ) {
+        var form = $( "#client_org_id-listbox" ).jqmData( "filter-form" ),
+            placeInDialog = ( e.type === "pagebeforeshow" ),
+            destination = placeInDialog ? $( e.target ).find( ".ui-content" ) : $( "#client_org_id-listbox" );
+        form
+            .find( "input" )
+            .textinput( "option", "inset", !placeInDialog )
+            .end()
+            .prependTo( destination );
+    });
+
+	
+    
+    <!--==============client/org select for visit log report===========-->
+	
+	$.mobile.document.on( "listviewcreate", "#rpt_client_org_id-menu", function( e ) {
+        var input,
+            listbox = $( "#rpt_client_org_id-listbox" ),
+            form = listbox.jqmData( "filter-form" ),
+            listview = $( e.target );
+        if ( !form ) {
+            input = $( "<input id='clientSearch' data-type='search'></input>" );
+            form = $( "<form></form>" ).append( input );
+            input.textinput();
+            $( "#rpt_client_org_id-listbox" )
+                .prepend( form )
+                .jqmData( "filter-form", form );
+        }
+        listview.filterable({ input: input });
+    })
+    .on( "pagebeforeshow pagehide", "#rpt_client_org_id-dialog", function( e ) {
+        var form = $( "#rpt_client_org_id-listbox" ).jqmData( "filter-form" ),
+            placeInDialog = ( e.type === "pagebeforeshow" ),
+            destination = placeInDialog ? $( e.target ).find( ".ui-content" ) : $( "#rpt_client_org_id-listbox" );
+        form
+            .find( "input" )
+            .textinput( "option", "inset", !placeInDialog )
+            .end()
+            .prependTo( destination );
+    });
+	
+	
+	<!--==============KAM select for visit report===========-->	
+	$.mobile.document.on( "listviewcreate", "#rpt_rep_id-menu", function( e ) {
+        var input,
+            listbox = $( "#rpt_rep_id-listbox" ),
+            form = listbox.jqmData( "filter-form" ),
+            listview = $( e.target );
+        if ( !form ) {
+            input = $( "<input id='clientSearch' data-type='search'></input>" );
+            form = $( "<form></form>" ).append( input );
+            input.textinput();
+            $( "#rpt_rep_id-listbox" )
+                .prepend( form )
+                .jqmData( "filter-form", form );
+        }
+        listview.filterable({ input: input });
+    })
+    .on( "pagebeforeshow pagehide", "#rpt_rep_id-dialog", function( e ) {
+        var form = $( "#rpt_rep_id-listbox" ).jqmData( "filter-form" ),
+            placeInDialog = ( e.type === "pagebeforeshow" ),
+            destination = placeInDialog ? $( e.target ).find( ".ui-content" ) : $( "#rpt_rep_id-listbox" );
+        form
+            .find( "input" )
+            .textinput( "option", "inset", !placeInDialog )
+            .end()
+            .prependTo( destination );
+    });
+	
+	</script>
+    
     </head>
     
 
@@ -111,13 +195,14 @@
         <div data-theme="c" data-role="page" id="menuPage"   >
            <div data-role="panel" id="routePanel" data-display="overlay" style="width:60%; background-color:#FFF">
 				<!-- panel content goes here unilogo1.jpg-->
-				<div align="center">
-                <img src="logo_gp.png" alt="GP" /><br>
-				<font style="color:#333; font-size:25px;">grameenphone</font></div>
+				<img style="width:100%;"  src="logo_gp.png" alt="GP" /><br>
+				<font style="color:#007D7D; font-size:25px;">Grameenphone</font>
 				<br><br><br><br>
 				<ul data-role="listview">
                     <div style="background:#008A8A; height:1px"></div>
-                    <li><a onClick="get_report()" href="#">Reports</a></li>
+                    <li><a onClick="get_visitlog()" href="#">Visit Log</a></li>
+                    <div style="background:#008A8A; height:1px"></div>
+                    <li><a onClick="get_visit_reports()" href="#">Reports</a></li>
                     <div style="background:#008A8A; height:1px"></div>
                     <br><br><br>
                     
@@ -141,8 +226,7 @@
                 
             </div>
             
-			<div  data-role="content" >
-            	
+			<div  data-role="content" >            	
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
                        <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Today" id="radio_1">Today</label>                                 
@@ -158,10 +242,15 @@
 				
                 <div>	
                 
-                <div id="client_org_div_id"></div>
+                <select name="client_org" id="client_org_id" onChange="checkOthersComp()" data-native-menu="false">                
+                	<option value="0" >Name Of the Org.</option>
+                </select>
+                
 				<input type="text" name="client_org_others" id="client_org_others_id" placeholder="Others Organization" style="height:auto;" value="">
                 
-                <div id="visit_type_div_id"></div>
+                <select name="visit_type" id="visit_type_id" onChange="checkOthersVisitType()" data-native-menu="false">
+                	<option value="0" >Visit Type</option>                	
+                </select>
                 
                 <input type="text" name="visit_type_others" id="visit_type_others_id" placeholder="Others Visit Type" style="height:auto;" value="">
                 
@@ -195,8 +284,8 @@
 			
 			<div data-role="content" align="center">
 				<font color="#CCFFCC" face="Arial, Helvetica, sans-serif" size="-1">                         
-				<input type="text" name="cm_id" id="cm_id" placeholder="Rep ID" value="">
-				<input type="text" name="cm_pass" id="cm_pass" placeholder="Rep Pass" value="">
+				<input type="text" name="cm_id" id="cm_id" placeholder="ID" value="">
+				<input type="text" name="cm_pass" id="cm_pass" placeholder="Pass" value="">
                 </font>                
 				</br></br>	
 				
@@ -212,8 +301,8 @@
      <!-- ============================ SUCCESS MESSAGE============================-->     
     <div data-theme="c" data-role="page" id="endPage">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
-                <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+			    <a  data-role="button" href="" onClick="getMenuPage()"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                
                 <h3>Success</h3>
             </div>
 		    
@@ -230,20 +319,22 @@
 	  		</div>
 	</div>
       
-    <!-- ============================ Report ============================-->     
-    <div data-theme="c" data-role="page" id="report_page">
+    <!-- ============================ Visit Log ============================-->     
+    <div data-theme="c" data-role="page" id="visitlog_page">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
 			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
                 <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
-                <h3>Reports</h3>
+                <h3>Visit Log</h3>
             </div>
 		    
 			<div  data-role="content" >
             	
-               	<div id="rpt_client_org_div_id"></div>                
+                <select name="rpt_client_org" id="rpt_client_org_id" data-native-menu="false">
+                	<option value="0" >Name Of the Org.</option>
+                </select>
+                
         		<a id="sub_button" data-role="button" onClick="getLastFiveVisit()" >Last 5 Visit</a>
 				
-                
                 </br>
         		
                 <div id="report_message" style="color:#F03;"></div>
@@ -252,6 +343,39 @@
                 
                 <br/>                
                 <div id="report_data"></div>
+                
+                <br/>
+                <br/>
+	  		</div>
+	</div>
+    
+    <!-- ============================ Reports ============================-->     
+    <div data-theme="c" data-role="page" id="report_page">
+		    <div data-theme="c" data-role="header" data-position="fixed" >
+			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+                <h3>Reports</h3>
+            </div>
+		    
+			<div  data-role="content" >
+                <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="Today" id="radio_1">Today</label>                                 
+                <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="Yesterday" id="radio_2">Yesterday</label>            
+                <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="ThisMonth" id="radio_3">This Month</label>                                               
+                                
+               	<div id="rpt_rep_div_id"></div>
+                
+                
+                </br></br>      
+        		<a id="sub_button" data-role="button" onClick="getSummaryReport()" >Show Summary</a>
+				
+                </br>
+        		
+                <div id="report_visit_message" style="color:#F03;"></div>
+                
+                <div id="summary_loader" style="text-align:center;"><img src="running.gif"/></div>
+                
+                <br/>                
+                <div id="report_visitdata"></div>
                 
                 <br/>
                 <br/>

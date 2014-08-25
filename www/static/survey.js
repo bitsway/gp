@@ -14,21 +14,19 @@ var apipath='http://e.businesssolutionapps.com/gp/syncmobile/';
 //-------GET GEO LOCATION Start----------------------------
 function getlocationand_askhelp() { //location
 	navigator.geolocation.getCurrentPosition(onSuccess, onError);
-	
 }
-	 
+
 // onSuccess Geolocation
 function onSuccess(position) {		
 	$("#lat").val(position.coords.latitude);
 	$("#long").val(position.coords.longitude);
-
 }
 
 function onError(error) {
 	$("#lat").val(0);
 	$("#long").val(0);
 	}
-	
+
 //-------GET GEO LOCATION End----------------------------
 //=============get time start===================
 function get_date() {
@@ -49,12 +47,11 @@ function exit() {
 navigator.app.exitApp();
 }
 
-		
 // -------------- If Not synced, Show login
 function first_page(){
 	if ((localStorage.synced!='YES')){
 		var url = "#login";
-		$.mobile.navigate(url);		
+		$.mobile.navigate(url);
 	}
 }
 
@@ -64,13 +61,16 @@ function clear_autho(){
 	localStorage.cm_id='';
 	localStorage.cm_pass='';
 	localStorage.synced='';
-	localStorage.synced='';
 	localStorage.synccode='';
-	localStorage.clientListShow='';
-	localStorage.clientListShowReport='';
+		
+	localStorage.repListShowReport='';
 	
-	localStorage.visitTypeListShow='';	
+	localStorage.clientListStr='';
+	localStorage.visitTypeListStr='';
+	localStorage.repListStr='';
+		
 	localStorage.report_data=""
+	localStorage.report_visitdata=""
 	
 	var url = "#login";
 	$.mobile.navigate(url);	
@@ -97,7 +97,8 @@ function check_user() {
    		localStorage.cm_pass=cm_pass;
    		//localStorage.synccode=synccode;
 		localStorage.synced='NO'
-   				
+   		
+		//alert(apipath+'check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode);	
 		//$("#error_login").html(apipath+'check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode);	
    		
 		$.ajax({
@@ -122,71 +123,37 @@ function check_user() {
 								$("#loginButton").show();
 								$("#login_image").hide();
 								
-								localStorage.synced='YES';
-								localStorage.synccode=resultArray[1];								
-								var client_string=resultArray[2];																
-								var visit_type_string=resultArray[3];
 								
-								var clientList = client_string.split('<rd>');
-								var visitTypeList = visit_type_string.split('<rd>');								
+								localStorage.synccode=resultArray[1];
+								localStorage.clientListStr=resultArray[2];
+								localStorage.visitTypeListStr=resultArray[3];
+								localStorage.repListStr=resultArray[4];
 								
-								//alert (client_string);
+								var rep_string=resultArray[4];
+															
+								var repList = rep_string.split('<rd>');
 								
-								//======= Name of org/Client
-								var clientListShow='<select name="client_org" id="client_org_id" onChange="checkOthersComp()" data-native-menu="false"><option value="0" >Name Of the Org.</option>'
-								clientListShowLength=clientList.length								
-								for (var i=0; i < clientListShowLength; i++){
-									var clientValueArray = clientList[i].split('<fd>');
-									var clientID=clientValueArray[0];
-									var clientName=clientValueArray[1];
-									var clientZone=clientValueArray[2];
-									
-									clientListShow=clientListShow+'<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>'
+								//======= Name of rep/KAM report
+								var repListShowReport=''
+								var rptRepListShowLength=repList.length
+								if (rep_string!=''){									
+									repListShowReport='<select name="rpt_rep" id="rpt_rep_id" data-native-menu="false"><option value="0" >Select KAM</option>'
+									repListShowReport=repListShowReport+'<option value="ALL" >ALL</option>'
+									for (var i=0; i < rptRepListShowLength; i++){
+										var rptRepValueArray = repList[i].split('<fd>');
+										var repID=rptRepValueArray[0];
+										var repName=rptRepValueArray[1];																		
+										repListShowReport=repListShowReport+'<option value="'+repID+'" >'+repName+'-'+repID+'</option>'
+									}
+									repListShowReport=repListShowReport+'</select>'									
+								
 								}
-								clientListShow=clientListShow+'<option value="Others" >Others</option>'
-								clientListShow=clientListShow+'</select>'
-								
-								localStorage.clientListShow=clientListShow;
-								
-								//======= Name of org/Client report
-								var clientListShowReport='<select name="rpt_client_org" id="rpt_client_org_id" data-native-menu="false"><option value="0" >Name Of the Org.</option>'
-								var rptclientListShowLength=clientList.length								
-								for (var i=0; i < rptclientListShowLength; i++){
-									var rptclientValueArray = clientList[i].split('<fd>');
-									var clientID=rptclientValueArray[0];
-									var clientName=rptclientValueArray[1];
-									var clientZone=rptclientValueArray[2];
-									
-									clientListShowReport=clientListShowReport+'<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>'
-								}
-								clientListShowReport=clientListShowReport+'<option value="Others" >Others</option>'
-								clientListShowReport=clientListShowReport+'</select>'
-								
-								localStorage.clientListShowReport=clientListShowReport;
-								
-								//======= Visit Type
-								var visitTypeListShow=''
-								visitTypeListShow='<select name="visit_type" id="visit_type_id" onChange="checkOthersVisitType()" data-native-menu="false"><option value="0" >Visit Type</option>'
-								visitTypeListShowLength=visitTypeList.length								
-								for (var i=0; i < visitTypeListShowLength; i++){
-									visitTypeValue = visitTypeList[i];
-									
-									visitTypeListShow=visitTypeListShow+'<option value="'+visitTypeValue+'" >'+visitTypeValue+'</option>'
-								}
-								visitTypeListShow=visitTypeListShow+'<option value="Others" >Others</option>'
-								visitTypeListShow=visitTypeListShow+'</select>'
-								
-								localStorage.visitTypeListShow=visitTypeListShow;
+								localStorage.repListShowReport=repListShowReport;
 								
 								//====================
-								//$("#visit_type_div_id").html(visitTypeListShow);
 								
-								//$('#client_org_div_id').empty();
-								//$('#client_org_div_id').append(clientListShow).trigger('create');
-								
-								//$('#visit_type_div_id').empty();
-								//$('#visit_type_div_id').append(visitTypeListShow).trigger('create');
-													
+								localStorage.synced='YES';
+									
 								var url = "#menuPage";
 								$.mobile.navigate(url);
 								location.reload();
@@ -210,11 +177,54 @@ function check_user() {
 	}//function
 
 
+//===========  Client List Combo
+function addClientList() {
+	var client_string=localStorage.clientListStr;
+	
+	var clientList = client_string.split('<rd>');
+	var clientListShowLength=clientList.length	
+	
+	var ob1 = $("#client_org_id");
+	var ob2 = $("#rpt_client_org_id");
+		
+	for (var i=0; i < clientListShowLength; i++){
+		var clientValueArray = clientList[i].split('<fd>');
+		var clientID=clientValueArray[0];
+		var clientName=clientValueArray[1];
+		var clientZone=clientValueArray[2];
+		
+		ob1.append('<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>');
+		ob2.append('<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>');		
+	}
+	ob1.append('<option value="Others" >Others</option>');	
+	ob2.append('<option value="Others" >Others</option>');
+	
+}
+
+//======= Visit Type Combo
+function addVisitTypeList() {
+	var visit_type_string=localStorage.visitTypeListStr;
+	
+	var visitTypeList = visit_type_string.split('<rd>');
+	var visitTypeListShowLength=visitTypeList.length	
+	
+	var ob3 = $("#visit_type_id");
+			
+	for (var i=0; i < visitTypeListShowLength; i++){
+		var visitTypeValue = visitTypeList[i];
+		
+		ob3.append('<option value="'+visitTypeValue+'" >'+visitTypeValue+'</option>');		
+	}
+	ob3.append('<option value="Others" >Others</option>');
+		
+}
+
 //=====================  Menu Page Refresh
 function getMenuPage() { 
-	clientListShow=localStorage.clientListShow;
-	visitTypeListShow=localStorage.visitTypeListShow;
-	if((visitTypeListShow!=undefined) && (clientListShow!='undefined')){
+	clientListStr=localStorage.clientListStr;
+	visitTypeListStr=localStorage.visitTypeListStr;
+	
+	if((visitTypeListStr!=undefined) && (clientListStr!='undefined')){
 		var url = "#menuPage";
 		$(location).attr('href',url);
 		location.reload();
@@ -307,15 +317,22 @@ function submit_data() {
 }
 
 
-//================= Reports
-function get_report(){
+//================= visit log
+function get_visitlog(){
 	localStorage.report_data="";	
 	//=====	
-	var url = "#report_page";
-	$.mobile.navigate(url);
-	//location.reload();
+	var url = "#visitlog_page";
+	$.mobile.navigate(url);	
 }
 
+//================= Reports
+function get_visit_reports(){
+	localStorage.reports_visitdata="";	
+	//=====
+	var url = "#report_page";
+	$.mobile.navigate(url);
+	location.reload();
+}
 
 function getLastFiveVisit(){
 		localStorage.report_data="";
@@ -354,7 +371,7 @@ function getLastFiveVisit(){
 									
 									var resultStrListLength=resultStrList.length
 									
-									var resultHeadShow='<b>'+resultRetArray[1]+'-'+resultRetArray[0]+'</b>'
+									//var resultHeadShow='<b>'+resultRetArray[1]+'-'+resultRetArray[0]+'</b>'
 									//00B7B7,00AEAE
 									
 									//var resultShow='<table width="100%" border="1" cellspacing="0" cellpadding="0" style="border-color:#EEEEEE;font-size:11px">'
@@ -363,13 +380,21 @@ function getLastFiveVisit(){
 									if (resultRetArray[0]!="00000"){
 										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>V.Date</b></td><td ><b>Visit Type</b></td><td ><b>Remarks</b></td></tr>'	
 										for (var i=0; i < resultStrListLength; i++){
-											resultValArray = resultStrList[i].split('<fd>');										
+											resultValArray = resultStrList[i].split('<fd>');	
+											if(resultValArray[5]=='' || resultValArray[5]==undefined){
+												continue;
+												}
+																		
 											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[5]+'</td><td >'+resultValArray[2]+'</td><td >'+resultValArray[3]+'</td></tr>'
 										}
 									}else{
 										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>New Org.</b></td><td ><b>V.Date</b></td><td ><b>Visit Type</b></td><td ><b>Remarks</b></td></tr>'	
 										for (var i=0; i < resultStrListLength; i++){
 											resultValArray = resultStrList[i].split('<fd>');										
+											if(resultValArray[0]=='' || resultValArray[5]==undefined){
+												continue;
+												}
+											
 											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[0]+'</td><td >'+resultValArray[5]+'</td><td >'+resultValArray[2]+'</td><td >'+resultValArray[3]+'</td></tr>'
 										}
 										
@@ -384,7 +409,7 @@ function getLastFiveVisit(){
 									$('#loader').hide();					
 									//=====
 									
-									var url = "#report_page";
+									var url = "#visitlog_page";
 									$.mobile.navigate(url);								
 									//location.reload();	
 								
@@ -394,7 +419,7 @@ function getLastFiveVisit(){
 					},error: function(result) {		
 					  $('#loader').hide();		  
 					  $("#report_message").html("Connectivity Error.Please Check Your Network Connection and Try Again");
-					  var url = "#report_page";
+					  var url = "#visitlog_page";
 					  $.mobile.navigate(url);
 					  
 				  }
@@ -406,5 +431,96 @@ function getLastFiveVisit(){
 
 //=============
 
-
+function getSummaryReport(){
+		localStorage.report_visitdata="";
+		$("#report_visit_message").html('');
+		$("#report_visitdata").html('');
+		
+		var rpt_rep_val=$( "#rpt_rep_id").val();
+		
+		var selected_period_rpt=($("input:radio[name='RadioPeriodRpt']:checked").val())	
+		if (selected_period_rpt=="" || selected_period_rpt==undefined){
+			$("#report_visit_message").html("Required Day");
+		}else{			
+			if (rpt_rep_val=="0"){
+				$("#report_visit_message").html('Select KAM');
+			}else{
+				
+				if (rpt_rep_val==undefined){
+					rpt_rep_val='ALL'
+					}
+				
+				$('#summary_loader').show();
+				//alert(apipath+'getSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val);
+				$.ajax({
+					type: 'POST',
+					url: apipath+'getSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val,
+					success: function(result) {	
+							//alert ('nadira');
+							if (result==''){
+								$('#summary_loader').hide();
+								$("#report_visit_message").html('Sorry Network not available');												
+							
+							}else if (result=='FAILED'){
+								$('#summary_loader').hide();							
+								$("#report_visit_message").html('Unauthorized User');
+							
+							}else{	
+									var resultRetArray = result.split('<rdrd>');
+									
+									if (resultRetArray.length==3){
+										var resultStrList = resultRetArray[2].split('<rd>');								
+										
+										
+										var resultStrListLength=resultStrList.length
+										
+										//var resultHeadShow='<b>'+resultRetArray[1]+'-'+resultRetArray[0]+'</b>'
+										//00B7B7,00AEAE
+										
+										//var resultShow='<table width="100%" border="1" cellspacing="0" cellpadding="0" style="border-color:#EEEEEE;font-size:11px">'
+										var resultShow='<table class="ui-body-d ui-shadow table-stripe ui-responsive" data-role="table" data-theme="d"  data-mode="display:none" style="cell-spacing:0px; width:100%">'
+										
+										var visitCount=0
+										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>Region</b></td><td ><b>Type</b></td><td ><b>Visit</b></td></tr>'	
+										for (var i=0; i < resultStrListLength; i++){
+											resultValArray = resultStrList[i].split('<fd>');
+											if(resultValArray[0]=='' || resultValArray[0]==undefined){
+												continue;
+												}
+																					
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[0]+'</td><td >'+resultValArray[1]+'</td><td >'+resultValArray[2]+'</td></tr>'
+											visitCount=visitCount+eval(resultValArray[2]);
+											
+										}
+										if (visitCount>0){
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td ></td><td ><b>Total</b></td><td ><b>'+visitCount+'</b></td></tr>'
+											}
+										
+										resultShow=resultShow+'</table>'
+										
+										localStorage.report_visitdata=resultShow	
+										
+										//==========
+										$("#report_visitdata").html(localStorage.report_visitdata);
+										$('#summary_loader').hide();					
+										//=====
+										
+										var url = "#report_page";
+										$.mobile.navigate(url);								
+										//location.reload();
+								}
+							};
+							
+						},error: function(result) {		
+						  $('#summary_loader').hide();		  
+						  $("#report_visit_message").html("Connectivity Error.Please Check Your Network Connection and Try Again");
+						  var url = "#report_page";
+						  $.mobile.navigate(url);
+						  
+					  }
+				  });//end ajax
+			  
+			};
+	};
+}
 		
