@@ -195,16 +195,15 @@
         <div data-theme="c" data-role="page" id="menuPage"   >
            <div data-role="panel" id="routePanel" data-display="overlay" style="width:60%; background-color:#FFF">
 				<!-- panel content goes here unilogo1.jpg-->
-				<img style="width:100%;"  src="logo_gp.png" alt="GP" /><br>
-				<font style="color:#007D7D; font-size:25px;">Grameenphone</font>
+				<div align="center">
+                <img style="width:100%" src="logo_gp.png" alt="GP" />
+                <br>
+				</div>
+                
 				<br><br><br><br>
-				<ul data-role="listview">
-                    <div style="background:#008A8A; height:1px"></div>
-                    <li><a onClick="get_visitlog()" href="#">Visit Log</a></li>
-                    <div style="background:#008A8A; height:1px"></div>
-                    <li><a onClick="get_visit_reports()" href="#">Reports</a></li>
-                    <div style="background:#008A8A; height:1px"></div>
-                    <br><br><br>
+                
+				<ul data-role="listview">                    
+                    <br><br>
                     
                     <div style="background:#008A8A; height:1px"></div>
                     <li><a href="#login" >Sync Authorization</a></li> 
@@ -222,11 +221,34 @@
             <div data-theme="c" data-role="header" data-position="fixed" >
 			    <a  data-role="button" href="#routePanel" class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
                 <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>
-                <h3>Visit Report</h3>
-                
+                <h3>Home</h3>                
             </div>
             
-			<div  data-role="content" >            	
+			<div  data-role="content" >
+                </br>
+                </br>                
+        		<a id="sub_button" data-role="button" onClick="visit_report()" >Visit</a>
+                <a id="sub_button" data-role="button" onClick="get_visitlog()" >Visit Log</a>
+                <a id="sub_button" data-role="button" onClick="get_visit_reports()" >Reports</a>
+				
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+	  		</div>
+            
+            
+        </div>
+    	
+        <!--  ================= Visit =================  -->        
+            <div data-theme="c" data-role="page" id="visit_page">
+                <div data-theme="c" data-role="header" data-position="fixed" >
+                    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                    <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+                    <h3>Visit</h3>
+                </div>
+                
+                <div  data-role="content" >            	
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
                        <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Today" id="radio_1">Today</label>                                 
@@ -235,7 +257,7 @@
                          <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Yesterday" id="radio_2">Y.</label>            
                     </div>
                     <div class="ui-block-c">
-                         <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="DBYesterday" id="radio_3">D.B.Y.</label>                                               
+                         <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="DBYesterday" id="radio_3">DBY</label>                                               
                     </div>                    
                 </div>	
                 <br>
@@ -271,10 +293,9 @@
                 <br/><br/><br/>
 	  		</div>
             
-            
         </div>
-    
-      <!--  ================= login page=================  -->        
+        
+      	<!--  ================= login page=================  -->        
         <div data-theme="c" data-role="page" id="login"   >
             <div data-theme="c" data-role="header" data-position="fixed" >
 			   <a   href="#" ><img src="logo_gp_mn.jpg"></a>
@@ -301,7 +322,7 @@
      <!-- ============================ SUCCESS MESSAGE============================-->     
     <div data-theme="c" data-role="page" id="endPage">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="" onClick="getMenuPage()"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+			    <a  data-role="button" href="" onClick="visit_report()"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
                 
                 <h3>Success</h3>
             </div>
@@ -311,7 +332,7 @@
                 
                 </br>
                 </br>
-        		<a id="sub_button" data-role="button" onClick="getMenuPage()" >New Visit</a>
+        		<a id="sub_button" data-role="button" onClick="visit_report()" >New Visit</a>
 				
               <div id="dataerror" style="color:#FF0; font-family:Arial, Helvetica, sans-serif; text-decoration:none; font-size:12px; font-style:normal; font-weight:lighter; text-shadow:none"  align="center"> </div>
                 <br/><br/>
@@ -350,7 +371,7 @@
 	</div>
     
     <!-- ============================ Reports ============================-->     
-    <div data-theme="c" data-role="page" id="report_page">
+    	<div data-theme="c" data-role="page" id="report_page">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
 			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
                 <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>

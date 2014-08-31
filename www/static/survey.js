@@ -153,12 +153,11 @@ function check_user() {
 								//====================
 								
 								localStorage.synced='YES';
-									
+								
 								var url = "#menuPage";
 								$.mobile.navigate(url);
-								location.reload();
+								//location.reload();
 								
-								//getMenuPage();
 							}else{
 								$("#loginButton").show();
 								$("#login_image").hide();
@@ -225,8 +224,20 @@ function getMenuPage() {
 	visitTypeListStr=localStorage.visitTypeListStr;
 	
 	if((visitTypeListStr!=undefined) && (clientListStr!='undefined')){
-		var url = "#menuPage";
-		$(location).attr('href',url);
+		var url = "#menuPage";		
+		$.mobile.navigate(url);
+		//location.reload();
+	}
+}
+
+//=====================  Menu Page Refresh
+function visit_report() { 
+	clientListStr=localStorage.clientListStr;
+	visitTypeListStr=localStorage.visitTypeListStr;
+	
+	if((visitTypeListStr!=undefined) && (clientListStr!='undefined')){
+		var url = "#visit_page";
+		$.mobile.navigate(url);	
 		location.reload();
 	}
 }
@@ -240,7 +251,7 @@ function submit_data() {
 	var selected_period=($("input:radio[name='RadioPeriod']:checked").val())
 	
 	if (selected_period=="" || selected_period==undefined){
-		$("#submit_data").html("Required Day");
+		$("#submit_data").html("Day Required");
 	}else{
 		
 		var client_org_val=$( "#client_org_id").val();
@@ -263,17 +274,17 @@ function submit_data() {
 			}
 		
 		if (client_org_val=="0"){
-			$("#submit_data").html("Required Name Of Org.");
+			$("#submit_data").html("Name Of Org. Required");
 		}else{
 			if (visit_type_val=="0"){
-				$("#submit_data").html("Required Visit Type");
+				$("#submit_data").html("Visit Type Required");
 			}else{
 				
 				if (client_org_val=='Others' && client_new==''){
-					$("#submit_data").html("Required Others Organization");
+					$("#submit_data").html("Others Organization Required");
 				}else{
 					if (visit_type_val=='Others' && visit_type_new==''){
-						$("#submit_data").html("Required Others Visit Type");
+						$("#submit_data").html("Others Visit Type Required");
 					}else{
 					
 						$("#sub_button").hide();
@@ -304,7 +315,7 @@ function submit_data() {
 									  //alert ("error");
 									  $("#sub_button").show();
 									  $("#submit_data").html("Connectivity Error.Please Check Your Network Connection and Try Again");
-									  var url = "#menuPage";
+									  var url = "#visit_page";
 									  $.mobile.navigate(url);	
 								  }
 							  });//end ajax
@@ -322,7 +333,8 @@ function get_visitlog(){
 	localStorage.report_data="";	
 	//=====	
 	var url = "#visitlog_page";
-	$.mobile.navigate(url);	
+	$.mobile.navigate(url);
+	location.reload();
 }
 
 //================= Reports
@@ -342,7 +354,7 @@ function getLastFiveVisit(){
 		var rpt_client_val=$( "#rpt_client_org_id").val();
 		
 		if (rpt_client_val=="0"){
-			$("#report_message").html('Required Name Of Org.');
+			$("#report_message").html('Name Of Org. Required');
 		}else{
 			if (rpt_client_val=='Others'){
 				rpt_client_val='00000'
@@ -440,10 +452,10 @@ function getSummaryReport(){
 		
 		var selected_period_rpt=($("input:radio[name='RadioPeriodRpt']:checked").val())	
 		if (selected_period_rpt=="" || selected_period_rpt==undefined){
-			$("#report_visit_message").html("Required Day");
+			$("#report_visit_message").html("Day Required");
 		}else{			
 			if (rpt_rep_val=="0"){
-				$("#report_visit_message").html('Select KAM');
+				$("#report_visit_message").html('KAM Required');
 			}else{
 				
 				if (rpt_rep_val==undefined){
@@ -481,19 +493,19 @@ function getSummaryReport(){
 										var resultShow='<table class="ui-body-d ui-shadow table-stripe ui-responsive" data-role="table" data-theme="d"  data-mode="display:none" style="cell-spacing:0px; width:100%">'
 										
 										var visitCount=0
-										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>Region</b></td><td ><b>Type</b></td><td ><b>Visit</b></td></tr>'	
+										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>Visit Type</b></td><td ><b>Visit</b></td></tr>'	
 										for (var i=0; i < resultStrListLength; i++){
 											resultValArray = resultStrList[i].split('<fd>');
 											if(resultValArray[0]=='' || resultValArray[0]==undefined){
 												continue;
 												}
 																					
-											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[0]+'</td><td >'+resultValArray[1]+'</td><td >'+resultValArray[2]+'</td></tr>'
-											visitCount=visitCount+eval(resultValArray[2]);
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[0]+'</td><td >'+resultValArray[1]+'</td></tr>'
+											visitCount=visitCount+eval(resultValArray[1]);
 											
 										}
 										if (visitCount>0){
-											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td ></td><td ><b>Total</b></td><td ><b>'+visitCount+'</b></td></tr>'
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td ><b>Total</b></td><td ><b>'+visitCount+'</b></td></tr>'
 											}
 										
 										resultShow=resultShow+'</table>'
