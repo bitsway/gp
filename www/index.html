@@ -53,29 +53,38 @@
    
    <script>     
     $(document).ready(function(){
-				
-				$("#login_image").hide();
-				$('#loader').hide();
-				$('#summary_loader').hide();
-				
-				$("#client_org_others_id").hide();
-				$("#visit_type_others_id").hide();
-				
-				first_page();
-				addClientList();				
-				addVisitTypeList();				
-				
-				$("#rpt_rep_div_id").html(localStorage.repListShowReport);
-								
-				$("#client_org_others_id").val("");
-				$("#visit_type_others_id").val("");
-				$("#remarks_id").val("");
-				
-				
-				
-			  //================
+		
+		$("#wait_image_login").hide();
+		
+		$("#wait_visit_submit").hide();
+		$("#btn_visit_submit").show();
+		
+		$("#client_org_others_id").hide();
+		$("#visit_type_others_id").hide();
+		
+		$('#wait_lastFiveVisit').hide();
+		$('#btn_lastFiveVisit').show();
+		
+		$('#wait_report_summary').hide();
+		$('#btn_report_summary').show();
+		
+		$('#wait_change_password').hide();
+		$('#btn_change_password').show();
+		
+		first_page();
+		
+		//addClientList();				
+		//addVisitTypeList();				
+		
+		//$("#rpt_rep_div_id").html(localStorage.repListShowReport);
+		
+		//$("#client_org_others_id").val("");
+		//$("#visit_type_others_id").val("");
+		//$("#remarks_id").val("");
+		
+	  //================
   				
-		});    
+	});    
 	
 	function checkOthersComp(){
 				var clientOrgValue=$("#client_org_id").val();
@@ -106,8 +115,8 @@
             form = listbox.jqmData( "filter-form" ),
             listview = $( e.target );
         if ( !form ) {
-            input = $( "<input id='clientSearch' data-type='search'></input>" );
-            form = $( "<form></form>" ).append( input );
+            input = $( "<input id='clientSearch' data-type='search'></input><br>" );
+            form = $( "<form></form>" ).append(input );
             input.textinput();
             $( "#client_org_id-listbox" )
                 .prepend( form )
@@ -125,7 +134,6 @@
             .end()
             .prependTo( destination );
     });
-
 	
     
     <!--==============client/org select for visit log report===========-->
@@ -136,7 +144,7 @@
             form = listbox.jqmData( "filter-form" ),
             listview = $( e.target );
         if ( !form ) {
-            input = $( "<input id='clientSearch' data-type='search'></input>" );
+            input = $( "<input id='clientSearch' data-type='search'></input><br>" );
             form = $( "<form></form>" ).append( input );
             input.textinput();
             $( "#rpt_client_org_id-listbox" )
@@ -164,7 +172,7 @@
             form = listbox.jqmData( "filter-form" ),
             listview = $( e.target );
         if ( !form ) {
-            input = $( "<input id='clientSearch' data-type='search'></input>" );
+            input = $( "<input id='clientSearch' data-type='search'></input><br>" );
             form = $( "<form></form>" ).append( input );
             input.textinput();
             $( "#rpt_rep_id-listbox" )
@@ -190,7 +198,42 @@
     
 
     <body>  
-    
+
+     	<!--  ================= login page=================  -->        
+        <div data-theme="c" data-role="page" id="login"   >
+            <div data-theme="c" data-role="header" data-position="fixed" >
+			   <!--<a   href="#" ><img src="logo_gp_mn.jpg"></a>-->
+               <!--<a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>-->
+                <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
+                <a  data-role="button" onClick="exit();" class="ui-btn-right" style="padding:4px;"><img src="exit.png" style="height:25px; width:25px;"></a>
+                <h3>Authorization</h3>
+            </div>
+			
+			<div data-role="content">
+            	<div id="error_login" style="color:#C00"></div>   
+                
+				<!--<font color="#CCFFCC" face="Arial, Helvetica, sans-serif" size="-1">     -->                    
+				<input type="number" name="cm_id" id="cm_id" placeholder="ID" value="">
+				<input type="password" name="cm_pass" id="cm_pass" placeholder="Pass" value="">
+                <!--</font>   -->             
+				</br>
+				
+                <div align="center"><img id="wait_image_login" height="50px" width="50px" src="loading.gif"></div>
+                <a id="loginButton" data-role="button"  onClick="check_user()" >Sync</a>				
+				
+                <br><br><br><br><br><br><br><br><br><br>
+                
+                <input name="clear_auth_check" id="clear_auth_check" data-mini="true" type="checkbox" value="Yes">
+                <label for="clear_auth_check">Confirm Clear Authorization</label>
+                
+                <a data-role="button" onClick="clear_autho();" >Clear Authorization</a>       
+                <br><br><br><br><br><br>
+                
+            </div>
+			
+        </div><!--/login page-->
+   
+   
      <!--======================Menu page start==================-->        
         <div data-theme="c" data-role="page" id="menuPage"   >
            <div data-role="panel" id="routePanel" data-display="overlay" style="width:60%; background-color:#FFF">
@@ -203,52 +246,72 @@
 				<br><br><br><br>
                 
 				<ul data-role="listview">                    
-                    <br><br>
-                    
-                    <div style="background:#008A8A; height:1px"></div>
-                    <li><a href="#login" >Sync Authorization</a></li> 
-                    <div style="background:#008A8A; height:1px"></div>
-                    <li><a onClick="clear_autho()" href="#login">Clear Authorization</a></li>
-                    <div style="background:#008A8A; height:1px"></div>
-                    
+                    <br><br>                    
+                    <ul data-role="listview">                    
+                        <br><br>
+                        <div style="background:#008A8A; height:1px"></div>
+                        <li ><div ><a href="#login" ><img src="sync.png"></a></div></li> 
+                        <div style="background:#008A8A; height:1px"></div>
+                    </ul>  
+                    <ul data-role="listview">                    
+                        <br><br>
+                        <div style="background:#008A8A; height:1px"></div>
+                        <li ><div ><a href="#change_password" ><img src="password.png"></a></div></li> 
+                        <div style="background:#008A8A; height:1px"></div>
+                    </ul>              
                 </ul>
                 
 				<div style="margin:100%;"></div>
-				<!--<img src="logo_gp.png" alt="Grameen Phone" />-->
 				
 			</div><!-- /panel -->
             
             <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="#routePanel" class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
-                <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>
+			    <!--<a  data-role="button" href="#routePanel" class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>-->
+                <a  data-role="button" href="#routePanel" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
+                <a  data-role="button" onClick="exit();" class="ui-btn-right" style="padding:4px;"><img src="exit.png" style="height:25px; width:25px;"></a>
+                
                 <h3>Home</h3>                
             </div>
             
 			<div  data-role="content" >
                 </br>
-                </br>                
-        		<a id="sub_button" data-role="button" onClick="visit_report()" >Visit</a>
-                <a id="sub_button" data-role="button" onClick="get_visitlog()" >Visit Log</a>
-                <a id="sub_button" data-role="button" onClick="get_visit_reports()" >Reports</a>
-				
+                </br>
+                <a id="sub_button" data-role="button" style="height:80px;" onClick="visit_report()" ><img style="padding-top:0px; padding-bottom:0px;" src="visit.png"></a>
+				<a id="sub_button" data-role="button" style="height:80px;" onClick="get_visitlog()" ><img src="visit_log.png"></a>                
+                <a  id="sub_button" data-role="button" style="height:80px;" onClick="get_visit_reports()" ><img src="reports.png"></a>
+                
+                <!--<ul data-role="listview" data-inset="true">
+                    <li ><a onClick="visit_report()"><img src="visit.png"></a></li>
+                </ul>
+                
+                <ul data-role="listview" data-inset="true">
+                	<li ><a onClick="get_visitlog()"><img src="visit_log.png"></a></li>                    
+                </ul>
+                
+                <ul data-role="listview" data-inset="true">
+                    <li ><a onClick="get_visit_reports()"><img src="reports.png"></a></li>                
+                </ul>-->
+                
                 <br/>
                 <br/>
                 <br/>
                 <br/>
 	  		</div>
             
-            
         </div>
     	
         <!--  ================= Visit =================  -->        
             <div data-theme="c" data-role="page" id="visit_page">
                 <div data-theme="c" data-role="header" data-position="fixed" >
-                    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+                    <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
                     <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
                     <h3>Visit</h3>
                 </div>
                 
-                <div  data-role="content" >            	
+              <div  data-role="content" >
+                <div id="error_visit_submit" style="color:#F03"></div>
+                            	
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
                        <label style="background:#81C0C0"><input type="radio" name="RadioPeriod"  value="Today" id="radio_1">Today</label>                                 
@@ -264,66 +327,40 @@
 				
                 <div>	
                 
-                <select name="client_org" id="client_org_id" onChange="checkOthersComp()" data-native-menu="false">                
+                <select name="client_org_id" id="client_org_id" onChange="checkOthersComp()" data-native-menu="false" >                
                 	<option value="0" >Name Of the Org.</option>
                 </select>
                 
-				<input type="text" name="client_org_others" id="client_org_others_id" placeholder="Others Organization" style="height:auto;" value="">
+				<input type="text" name="client_org_others_id" id="client_org_others_id" placeholder="Others Organization" style="height:auto;" value="">
                 
                 <select name="visit_type" id="visit_type_id" onChange="checkOthersVisitType()" data-native-menu="false">
                 	<option value="0" >Visit Type</option>                	
                 </select>
                 
-                <input type="text" name="visit_type_others" id="visit_type_others_id" placeholder="Others Visit Type" style="height:auto;" value="">
+                <input type="text" name="visit_type_others_id" id="visit_type_others_id" placeholder="Others Visit Type" style="height:auto;" value="">
                 
                 <textarea type="text" name="remarks" id="remarks_id" placeholder="Remarks" value=""></textarea>
                  
                  <input type="hidden" name="lat" id="lat" placesholder="" value="">
 			     <input type="hidden" name="long" id="long" placeholder="" value="">
+                 
                  </div>	
-                </br>
-                </br>
+                 </br>
+                 </br>
                 
-        		<a id="sub_button" data-role="button" onClick="getlocationand_askhelp(); submit_data()" >Submit</a>
-				                
-            	<div id="submit_data" style="color:#F03"></div>
+        		<a id="btn_visit_submit" data-role="button" onClick="getlocationand_askhelp(); submit_data()" >Submit</a>
+				<div align="center"><img id="wait_visit_submit" height="50px" width="50px" src="loading.gif"></div>
+                
+            	<br/><br/><br/><br/><br/>
             
-              <div id="dataerror" style="color:#FF0; font-family:Arial, Helvetica, sans-serif; text-decoration:none; font-size:12px; font-style:normal; font-weight:lighter; text-shadow:none"  align="center"> </div>
-                <br/><br/>
-                <br/><br/><br/>
 	  		</div>
             
         </div>
         
-      	<!--  ================= login page=================  -->        
-        <div data-theme="c" data-role="page" id="login"   >
-            <div data-theme="c" data-role="header" data-position="fixed" >
-			   <a   href="#" ><img src="logo_gp_mn.jpg"></a>
-               <a data-role="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-power ui-btn-icon-notext " onClick="exit()" >Exit </a>
-                <h3>Login</h3>
-            </div>
-			
-			<div data-role="content" align="center">
-				<font color="#CCFFCC" face="Arial, Helvetica, sans-serif" size="-1">                         
-				<input type="text" name="cm_id" id="cm_id" placeholder="ID" value="">
-				<input type="text" name="cm_pass" id="cm_pass" placeholder="Pass" value="">
-                </font>                
-				</br></br>	
-				
-                <div id="login_image" ><img height="40px" width="40px" src="loading.gif"></div>
-                <a id="loginButton" data-role="button"  onClick="check_user()" >Sync</a>				
-				<div id="error_login"></div>
-					   
-            </div>
-			
-        </div><!--/login page-->
-   
-    
      <!-- ============================ SUCCESS MESSAGE============================-->     
     <div data-theme="c" data-role="page" id="endPage">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="" onClick="visit_report()"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
-                
+			    <a  data-role="button" onClick="visit_report()" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
                 <h3>Success</h3>
             </div>
 		    
@@ -333,37 +370,39 @@
                 </br>
                 </br>
         		<a id="sub_button" data-role="button" onClick="visit_report()" >New Visit</a>
-				
-              <div id="dataerror" style="color:#FF0; font-family:Arial, Helvetica, sans-serif; text-decoration:none; font-size:12px; font-style:normal; font-weight:lighter; text-shadow:none"  align="center"> </div>
-                <br/><br/>
-                <br/><br/><br/>
+				<a id="sub_button" data-role="button" href="#menuPage" >Home</a>
+            
+             <br/><br/><br/><br/><br/>
+                
 	  		</div>
 	</div>
       
     <!-- ============================ Visit Log ============================-->     
     <div data-theme="c" data-role="page" id="visitlog_page">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+			     <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
                 <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
                 <h3>Visit Log</h3>
             </div>
 		    
 			<div  data-role="content" >
-            	
-                <select name="rpt_client_org" id="rpt_client_org_id" data-native-menu="false">
+            	<div id="error_lastFiveVisit" style="color:#F03;"></div>
+                
+                <select name="rpt_client_org_id" id="rpt_client_org_id" data-native-menu="false">
                 	<option value="0" >Name Of the Org.</option>
                 </select>
                 
-        		<a id="sub_button" data-role="button" onClick="getLastFiveVisit()" >Last 5 Visit</a>
-				
                 </br>
-        		
-                <div id="report_message" style="color:#F03;"></div>
+        		<a id="btn_lastFiveVisit" data-role="button" onClick="getLastFiveVisit()" >Last 5 Visit</a>
+				
+                <!--<div id="loader" style="text-align:center;"><img src="running.gif"/></div>-->
                 
-                <div id="loader" style="text-align:center;"><img src="running.gif"/></div>
+                <div align="center"><img id="wait_lastFiveVisit" height="50px" width="50px" src="loading.gif"></div>
                 
-                <br/>                
+                <br/>
                 <div id="report_data"></div>
+                
+                <br/>
                 
                 <br/>
                 <br/>
@@ -373,29 +412,33 @@
     <!-- ============================ Reports ============================-->     
     	<div data-theme="c" data-role="page" id="report_page">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
-			    <a  data-role="button" href="#menuPage"  class="ui-btn-left ui-btn-icon-notext"><img src="logo_gp_mn.jpg"></a>
+			    <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
                 <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
                 <h3>Reports</h3>
             </div>
 		    
 			<div  data-role="content" >
+            	<div id="error_report_summary" style="color:#F03;"></div>
+                
                 <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="Today" id="radio_1">Today</label>                                 
                 <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="Yesterday" id="radio_2">Yesterday</label>            
                 <label style="background:#81C0C0"><input type="radio" name="RadioPeriodRpt"  value="ThisMonth" id="radio_3">This Month</label>                                               
                                 
-               	<div id="rpt_rep_div_id"></div>
+               	<div id="rpt_rep_div_id">
+                    <select name="rpt_rep" id="rpt_rep_id" data-native-menu="false">
+                        <option value="0" >Select KAM</option>
+                    </select>                
+                </div>
                 
-                
-                </br></br>      
-        		<a id="sub_button" data-role="button" onClick="getSummaryReport()" >Show Summary</a>
-				
                 </br>
+                </br>      
         		
-                <div id="report_visit_message" style="color:#F03;"></div>
+                <a id="btn_report_summary" data-role="button" onClick="getSummaryReport()" >Show Summary</a>				
+                <div align="center"><img id="wait_report_summary" height="50px" width="50px" src="loading.gif"></div>
                 
-                <div id="summary_loader" style="text-align:center;"><img src="running.gif"/></div>
-                
-                <br/>                
+                </br>
+                </br>
+             
                 <div id="report_visitdata"></div>
                 
                 <br/>
@@ -403,12 +446,51 @@
 	  		</div>
 	</div>
     
-    <!--=====================wait page end=========================-->  
-    
-    
- <script type="text/javascript" src="phonegap.js"></script>
- 
- 
- 
-    </body>
+<!--  ================= Change Password =================  -->        
+        <div data-theme="c" data-role="page" id="change_password"   >
+            <div data-theme="c" data-role="header" data-position="fixed" >
+			   <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
+                <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+               <h3>Change Pass</h3>
+            </div>
+			
+			<div data-role="content">
+            	<div id="error_change_password" style="color:#C00"></div>   
+                
+				<input type="password" name="old_password" id="old_password" placeholder="Old Password" value="">
+				<input type="password" name="new_password" id="new_password" placeholder="New Password" value="">
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="">
+                
+				</br>
+				
+                <div align="center"><img id="wait_change_password" height="50px" width="50px" src="loading.gif"></div>
+                <a id="btn_change_password" data-role="button"  onClick="change_password()" >Submit</a>				
+				
+                <br><br><br><br><br><br><br><br><br><br><br><br>
+                
+                
+            </div>
+			
+        </div><!--/login page-->
+ <!-- ============================ SUCCESS MESSAGE============================-->     
+    <div data-theme="c" data-role="page" id="change_password_success">
+		    <div data-theme="c" data-role="header" data-position="fixed" >
+			    <h3>Success</h3>
+            </div>
+		    
+			<div  data-role="content" >
+               	<div >Password Changed Successfully. Please Sync Again With New Password.</div>
+                
+                </br>
+                </br>        		
+				<a id="sub_button" data-role="button"  onClick="change_pass_clear_autho()" >Sync</a>
+            
+             <br/><br/><br/><br/><br/>
+                
+	  		</div>
+	</div>
+<script type="text/javascript" src="phonegap.js"></script>
+
+
+ </body>
 </html>
