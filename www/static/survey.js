@@ -41,10 +41,13 @@ navigator.app.exitApp();
 
 // -------------- If Not synced, Show login
 function first_page(){
-	if ((localStorage.synced!='YES')){
+	if (localStorage.synced=='YES'){		
+		var url = "#menuPage";
+		$.mobile.navigate(url);		
+	}else{
 		var url = "#login";
-		$.mobile.navigate(url);
-	}
+		$.mobile.navigate(url);		
+		}
 }
 
 //=================after select an outlet
@@ -95,8 +98,26 @@ function change_pass_clear_autho(){
 	
 	var url = "#login";
 	$.mobile.navigate(url);	
-	location.reload();
+	location.reload();	
+}
+
+
+function login_clear_autho(){	
+	localStorage.cid='';
+	localStorage.cm_id='';
+	localStorage.cm_pass='';
+	localStorage.synced='';
+	localStorage.synccode='';
 	
+	localStorage.repListShowReport='';
+	
+	localStorage.clientListStr='';
+	localStorage.visitTypeListStr='';
+	localStorage.repListStr='';
+	
+	localStorage.client_org_combo='';
+	localStorage.rpt_client_org_combo='';
+		
 }
 
 //========================= Longin-Check user
@@ -114,11 +135,12 @@ function check_user() {
 		$("#wait_image_login").show();
 		$("#loginButton").hide();
 		
+		login_clear_autho();
 		
 		localStorage.cid='GP';
 		localStorage.cm_id=cm_id;
    		localStorage.cm_pass=cm_pass;   		
-		localStorage.synced='NO'
+		localStorage.synced=''
    		
 		//$("#error_login").html(apipath+'check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode);	
    		
