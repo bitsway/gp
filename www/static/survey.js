@@ -1,5 +1,5 @@
 
-var apipath='http://e.businesssolutionapps.com/gp/syncmobile/';
+//var apipath='http://e.businesssolutionapps.com/gp/syncmobile/';
 //var apipath='http://127.0.0.1:8000/gpmreporting/syncmobile/';
 
 
@@ -142,19 +142,17 @@ function check_user() {
    		localStorage.cm_pass=cm_pass;   		
 		localStorage.synced=''
    		
-		//$("#error_login").html(apipath+'check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode);	
-   		
+		//======
 		$.ajax({
 				 type: 'POST',
-				 url: apipath+'check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode,
+				 url: 'http://e.businesssolutionapps.com/gp/syncmobile/check_user?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode,
 				 success: function(result) {
 					 	//$("#error_login").html('ajax');				
 						if (result==''){
 							$("#loginButton").show();
 							$("#wait_image_login").hide();							
 							$("#error_login").html("Sorry Network not available");	
-						}else{
-							
+						}else{							
 							var resultArray = result.split('<SYNCDATA>');			
 							if (resultArray[0]=='FAILED'){
 								$("#loginButton").show();
@@ -392,12 +390,10 @@ function submit_data() {
 						$("#btn_visit_submit").hide();
 						$("#wait_visit_submit").show();
 						
-						//alert(apipath+'syncSubmitData?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&visit_day='+selected_period+'&client_id='+client_org_val+'&client_new='+client_new+'&visit_type='+visit_type_val+'&visit_type_new='+ visit_type_new +'&remarks='+remarks_val+'&lat='+lat+'&long='+long);
-						//$("#submit_data").html(apipath+'syncSubmitData?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&visit_day='+selected_period+'&client_id='+client_org_val+'&client_new='+client_new+'&visit_type='+visit_type_val+'&visit_type_new='+ visit_type_new +'&remarks='+remarks_val+'&lat='+lat+'&long='+long);
-						
+						//==========
 						$.ajax({
 								type: 'POST',
-								url: apipath+'syncSubmitData?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&visit_day='+selected_period+'&client_id='+client_org_val+'&client_new='+client_new+'&visit_type='+visit_type_val+'&visit_type_new='+ visit_type_new +'&remarks='+remarks_val+'&lat='+lat+'&long='+long,
+								url: 'http://e.businesssolutionapps.com/gp/syncmobile/syncSubmitData?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&visit_day='+selected_period+'&client_id='+client_org_val+'&client_new='+client_new+'&visit_type='+visit_type_val+'&visit_type_new='+ visit_type_new +'&remarks='+remarks_val+'&lat='+lat+'&long='+long,
 								success: function(result) {	
 										//alert ('nadira');
 										if (result==''){
@@ -420,13 +416,13 @@ function submit_data() {
 											$("#client_org_others_id").hide();
 											$("#visit_type_others_id").hide();
 											
+														
+											var url = "#endPage";
+											$.mobile.navigate(url);
 											
 											$("#wait_visit_submit").hide();
 											$("#btn_visit_submit").show();
-																				
-											var url = "#endPage";
-											$.mobile.navigate(url);
-																						
+																		
 										};
 										
 									},error: function(result) {
@@ -488,7 +484,7 @@ function getLastFiveVisit(){
 			
 			$.ajax({
 				type: 'POST',
-				url: apipath+'getLastFiveVisitReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&client_id='+rpt_client_val,
+				url: 'http://e.businesssolutionapps.com/gp/syncmobile/getLastFiveVisitReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&client_id='+rpt_client_val,
 				success: function(result) {	
 						//alert ('nadira');
 						if (result==''){							
@@ -612,12 +608,11 @@ function getSummaryReport(){
 				$('#btn_report_summary').hide();
 				$('#wait_report_summary').show();
 				
-				//alert(apipath+'getSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val);
+				//=======
 				$.ajax({
 					type: 'POST',
-					url: apipath+'getSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val,
-					success: function(result) {	
-							//alert ('nadira');
+					url: 'http://e.businesssolutionapps.com/gp/syncmobile/getSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val,
+					success: function(result) {								
 							if (result==''){
 								$("#error_report_summary").html('Sorry Network not available');												
 								$('#wait_report_summary').hide();
@@ -709,10 +704,10 @@ function change_password(){
 					$('#btn_change_password').hide();
 					$('#wait_change_password').show();
 					
-					//$("#error_change_password").html(apipath+'changePassword?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&new_pass='+new_password);
+					//========
 					$.ajax({
 						type: 'POST',
-						url: apipath+'changePassword?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&new_pass='+new_password,
+						url: 'http://e.businesssolutionapps.com/gp/syncmobile/changePassword?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&new_pass='+new_password,
 						success: function(result) {	
 								//alert ('nadira');
 								if (result==''){
