@@ -2,10 +2,6 @@
 //base url set directly because an unknown browser/mobile problem
 // Function: check_user,submit_data,getLastFiveVisit, getSummaryReport,change_password
 
-//not used, 
-//var apipath='http://e.businesssolutionapps.com/gp/syncmobile/';
-//var apipath='http://127.0.0.1:8000/gpmreporting/syncmobile/';
-
 
 //-------GET GEO LOCATION Start----------------------------
 function getlocationand_askhelp() { //location
@@ -385,10 +381,12 @@ function submit_data() {
 			long=0
 			}	;	
 		//Check Latlong
-		var latLongFlag=1;		
-		if (lat==0 || long==0){			
+		var latLongFlag=1;	
+			
+		/*if (lat==0 || long==0){			
 			latLongFlag=0;
-		}
+		}*/
+		
 		//-------------
 		
 		var client_new="";
@@ -420,7 +418,7 @@ function submit_data() {
 							$("#btn_visit_submit").hide();
 							$("#wait_visit_submit").show();
 							
-							//====== 						
+							//====== 		
 							$.ajax({
 									type: 'POST',
 									url: 'http://e.businesssolutionapps.com/gp/syncmobile/syncSubmitData?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&visit_day='+selected_period+'&client_id='+client_org_val+'&client_new='+client_new+'&visit_type='+visit_type_val+'&visit_type_new='+ visit_type_new +'&remarks='+remarks_val+'&lat='+lat+'&long='+long,
