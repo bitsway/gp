@@ -73,6 +73,8 @@
 		
 		first_page();
 		
+		$("#del_product_list_tbl").html(localStorage.product_tbl_del_str);
+		
 		//addClientList();				
 		//addVisitTypeList();				
 		
@@ -158,6 +160,34 @@
         var form = $( "#rpt_client_org_id-listbox" ).jqmData( "filter-form" ),
             placeInDialog = ( e.type === "pagebeforeshow" ),
             destination = placeInDialog ? $( e.target ).find( ".ui-content" ) : $( "#rpt_client_org_id-listbox" );
+        form
+            .find( "input" )
+            .textinput( "option", "inset", !placeInDialog )
+            .end()
+            .prependTo( destination );
+    });
+	
+	<!--==============client/org select for delivery visit===========-->
+	
+	$.mobile.document.on( "listviewcreate", "#delivery_client_cmb_id-menu", function( e ) {
+        var input,
+            listbox = $( "#delivery_client_cmb_id-listbox" ),
+            form = listbox.jqmData( "filter-form" ),
+            listview = $( e.target );
+        if ( !form ) {
+            input = $( "<input id='clientSearch' data-type='search'></input><br>" );
+            form = $( "<form></form>" ).append( input );
+            input.textinput();
+            $( "#delivery_client_cmb_id-listbox" )
+                .prepend( form )
+                .jqmData( "filter-form", form );
+        }
+        listview.filterable({ input: input });
+    })
+    .on( "pagebeforeshow pagehide", "#delivery_client_cmb_id-dialog", function( e ) {
+        var form = $( "#delivery_client_cmb_id-listbox" ).jqmData( "filter-form" ),
+            placeInDialog = ( e.type === "pagebeforeshow" ),
+            destination = placeInDialog ? $( e.target ).find( ".ui-content" ) : $( "#delivery_client_cmb_id-listbox" );
         form
             .find( "input" )
             .textinput( "option", "inset", !placeInDialog )
@@ -279,6 +309,7 @@
                 </br>
                 </br>
                 <a id="sub_button" data-role="button" style="height:80px;" onClick="visit_report()" ><img style="padding-top:0px; padding-bottom:0px;" src="visit.png"></a>
+                <a id="sub_button" data-role="button" style="height:80px;" onClick="delivery_visit()" ><img style="padding-top:0px; padding-bottom:0px;" src="d_confirmation.png"></a>
 				<a id="sub_button" data-role="button" style="height:80px;" onClick="get_visitlog()" ><img src="visit_log.png"></a>                
                 <a  id="sub_button" data-role="button" style="height:80px;" onClick="get_visit_reports()" ><img src="reports.png"></a>
                 
@@ -384,7 +415,50 @@
                 
 	  		</div>
 	</div>
-      
+     
+     
+     
+<!--=====================delivery confirm Page==================-->
+		<div data-theme="c" data-role="page" id="page_del_item">
+            <div data-theme="c" data-role="header" data-position="fixed" >
+                    <a  data-role="button" href="#menuPage" class="ui-btn-left ui-btn-icon-notext"><img height="15px;" src="gp_min_trans.png"></a>
+                    <a data-role="button" data-rel="back" data-icon="arrow-l" data-iconpos="left" class="ui-btn-right">Back</a>
+                    <h3>Delivery</h3>
+                </div>
+			
+            <div data-role="content">
+				<div id="msg_delivery_retailer" style="color:#C00"></div>
+                
+                <select name="delivery_client" id="delivery_client_cmb_id" data-native-menu="false">							
+					<option value="0" >Name Of the Org.</option>
+			    </select>
+                
+				<div id="del_product_list_tbl"></div>
+				
+                <a data-role="button" id="btn_delivery_submit" onClick="delivery_submit();" >Submit</a>
+                
+                <br>
+				                
+                <div align="center"><img id="wait_image_delivery_retailer" style="" width="50px;" src="loading.gif" alt=""></div>
+                
+				<br/>								
+				
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                
+            </div><!--/cont-->
+		 </div><!--/page-->
+
+     
+     
     <!-- ============================ Visit Log ============================-->     
     <div data-theme="c" data-role="page" id="visitlog_page">
 		    <div data-theme="c" data-role="header" data-position="fixed" >
@@ -441,7 +515,9 @@
                 </br>
                 </br>      
         		
-                <a id="btn_report_summary" data-role="button" onClick="getSummaryReport()" >Show Summary</a>				
+                <a id="btn_report_summary" data-role="button" onClick="getSummaryReport()" >Show Visit Summary</a>                	
+                <a id="btn_sales_summary" data-role="button" onClick="getSalesSummaryReport()" >Show Sales Summary</a>
+                
                 <div align="center"><img id="wait_report_summary" height="50px" width="50px" src="loading.gif"></div>
                 
                 </br>

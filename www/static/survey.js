@@ -74,6 +74,9 @@ function clear_autho(){
 		localStorage.client_org_combo='';
 		localStorage.rpt_client_org_combo='';
 		
+		localStorage.productListStr='';
+		localStorage.delivery_client_org='';
+		localStorage.product_tbl_del_str='';
 		
 		var url = "#login";
 		$.mobile.navigate(url);	
@@ -97,6 +100,10 @@ function change_pass_clear_autho(){
 	localStorage.client_org_combo='';
 	localStorage.rpt_client_org_combo='';
 	
+	localStorage.productListStr='';
+	localStorage.delivery_client_org='';
+	localStorage.product_tbl_del_str='';
+	
 	var url = "#login";
 	$.mobile.navigate(url);	
 	location.reload();	
@@ -118,7 +125,10 @@ function login_clear_autho(){
 	
 	localStorage.client_org_combo='';
 	localStorage.rpt_client_org_combo='';
-		
+	
+	localStorage.productListStr='';
+	localStorage.delivery_client_org='';
+	localStorage.product_tbl_del_str='';
 }
 
 //========================= Longin-Check user
@@ -174,7 +184,8 @@ function check_user() {
 								var client_string=resultArray[2];
 								var visitTypeListStr=resultArray[3];
 								var rep_string=resultArray[4];
-								
+								var item_string=resultArray[5];
+								localStorage.productListStr=item_string;
 								
 								//======= Name of rep/KAM report
 								var repList = rep_string.split('<rd>');
@@ -199,6 +210,7 @@ function check_user() {
 								
 								var client_org_id='<option value="0" >Name Of the Org.</option>';
 								var rpt_client_org_id='<option value="0" >Name Of the Org.</option>';
+								var delivery_client_org_id='<option value="0" >Name Of the Org.</option>';
 								
 								for (var i=0; i < clientListShowLength; i++){
 									var clientValueArray = clientList[i].split('<fd>');
@@ -208,6 +220,7 @@ function check_user() {
 									
 									client_org_id+='<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>';
 									rpt_client_org_id+='<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>';
+									delivery_client_org_id+='<option value="'+clientID+'" >'+clientName+'-'+clientID+'</option>';
 											
 								}
 								client_org_id+='<option value="Others" >Others</option>';
@@ -215,6 +228,7 @@ function check_user() {
 								
 								localStorage.client_org_combo=client_org_id;
 								localStorage.rpt_client_org_combo=rpt_client_org_id;
+								localStorage.delivery_client_org=delivery_client_org_id;
 								
 								
 								//==================== Visit Type Combo
@@ -231,6 +245,22 @@ function check_user() {
 								
 								localStorage.visitTypeListStr=visit_type_id;
 								
+								//--------- Delivery Item List	
+								var productList=item_string.split('<rd>');
+								var productLength=productList.length;
+								
+								var product_tbl_delevery='<table border="0" id="delevery_tbl" cellpadding="0" cellspacing="0" style="background-color:#F7F7F7; border-radius:5px;">';
+								for (var i=0; i < productLength; i++){
+									var productArray = productList[i].split('<fd>');
+									var product_id=productArray[0];	
+									var product_name=productArray[1];
+									
+									product_tbl_delevery+='<tr  style="border-bottom:1px solid #D2EEE9;"><td width="40%" style="text-align:center; padding-left:5px;"><input type="number" id="delivery_qty'+product_id+'" value="" placeholder="0" ><input type="hidden" id="delivery_id'+product_id+'" value="'+product_id+'" placeholder="qty" ><input type="hidden" id="delivery_name'+product_id+'" value="'+product_name+'" placeholder="qty" ></td><td width="60%" style="text-align:left;">&nbsp;&nbsp;'+product_name+'</td></tr>';
+								}
+								product_tbl_delevery+='</table>';								
+								localStorage.product_tbl_del_str=product_tbl_delevery
+								
+													
 								//=========================
 								localStorage.synced='YES';
 								
@@ -473,6 +503,152 @@ function submit_data() {
 }
 
 
+function delivery_visit() {	
+	$("#msg_delivery_retailer").text("");
+	
+	$("#wait_image_delivery_retailer").hide();
+	$("#btn_delivery_submit").show();		
+	
+	//----------------
+	var delivery_retailer_cmb = localStorage.delivery_client_org;
+	
+	var delivery_retailer_cmb_ob=$('#delivery_client_cmb_id');
+	delivery_retailer_cmb_ob.empty()
+	delivery_retailer_cmb_ob.append(delivery_retailer_cmb);
+	delivery_retailer_cmb_ob[0].selectedIndex = 0;
+	
+	//--------------
+	var productList=localStorage.productListStr.split('<rd>');
+	var productLength=productList.length;										
+	for (var j=0; j < productLength; j++){				
+		var deleveryItemArray = productList[j].split('<fd>');
+		var productId=deleveryItemArray[0];											
+		jQuery("#delivery_qty"+productId).val("");
+	}
+	
+	//----------------
+	var url = "#page_del_item";	
+	$.mobile.navigate(url);
+	
+	delivery_retailer_cmb_ob.selectmenu("refresh");
+	
+}
+
+
+function delivery_submit() {	
+	$("#msg_delivery_retailer").text("");
+	
+	clientId=$("#delivery_client_cmb_id").val();	
+	
+	if(clientId=='' || clientId==0){
+		$("#msg_delivery_retailer").text("Organization required");
+	}else{	
+		var productList2=localStorage.productListStr.split('<rd>');
+		var productLength2=productList2.length;
+				
+		var productDeleveryStr='';	
+		var validFlag=false
+		for (var i=0; i < productLength2; i++){
+			var productArray = productList2[i].split('<fd>');
+			var product_id=productArray[0];	
+			//var product_name=productArray[1];
+			
+			var pid=$("#delivery_id"+product_id).val();
+			var pQty=$("#delivery_qty"+product_id).val();
+			
+			//var pname=$("#delivery_name"+product_id).val();
+				
+			
+			var pqty=0
+			try{
+				pqty=eval(pQty)
+			}catch(ex){
+				pqty=0
+				validFlag=false
+			}
+			
+			if (pqty!='' && pqty > 0){
+				validFlag=true
+				if (productDeleveryStr==''){
+					//productDeleveryStr=pid+'<fd>'+pqty+'<fd>'+pname
+					productDeleveryStr=pid+'<fd>'+pqty
+				}else{
+					//productDeleveryStr+='<rd>'+pid+'<fd>'+pqty+'<fd>'+pname		
+					productDeleveryStr+='<rd>'+pid+'<fd>'+pqty
+					}			
+			}			
+		}
+	
+		if (validFlag==false){
+			$("#msg_delivery_retailer").text("Required Product Qty");
+		}else{
+			
+			$("#wait_image_delivery_retailer").show();		
+			$("#btn_delivery_submit").hide();
+			
+			
+			// ajax-------
+			$.ajax({
+				 type: 'POST',
+				 url: 'http://e.businesssolutionapps.com/gp/syncmobile/deliverySubmit?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&client_id='+clientId+'&delivery_data='+productDeleveryStr,
+				 //url: 'http://127.0.0.1:8000/gpmreporting/syncmobile/deliverySubmit?cid='+localStorage.cid+'&repid='+localStorage.cm_id+'&rep_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&client_id='+clientId+'&delivery_data='+productDeleveryStr,
+				 success: function(result) {
+						if (result==''){					
+							$("#msg_delivery_retailer").html('Sorry Network not available');
+							$("#wait_image_delivery_retailer").hide();		
+							$("#btn_delivery_submit").show();
+						}else{		
+							var resultArray = result.split('<SYNCDATA>');			
+							if (resultArray[0]=='FAILED'){						
+								$("#msg_delivery_retailer").html(resultArray[1]);
+								$("#wait_image_delivery_retailer").hide();		
+								$("#btn_delivery_submit").show();
+							}else if (resultArray[0]=='SUCCESS'){
+								
+								//----------------
+								var delivery_retailer_cmb = localStorage.delivery_client_org;
+								
+								var delivery_retailer_cmb_ob=$('#delivery_client_cmb_id');
+								delivery_retailer_cmb_ob.empty()
+								delivery_retailer_cmb_ob.append(delivery_retailer_cmb);
+								delivery_retailer_cmb_ob[0].selectedIndex = 0;
+								
+								//--------------
+								var productList=localStorage.productListStr.split('<rd>');
+								var productLength=productList.length;										
+								for (var j=0; j < productLength; j++){				
+									var deleveryItemArray = productList[j].split('<fd>');
+									var productId=deleveryItemArray[0];											
+									jQuery("#delivery_qty"+productId).val("");
+								}
+								
+								//----------------	
+								$("#msg_delivery_retailer").text("Submitted Successfully."+resultArray[1]);	
+								$("#wait_image_delivery_retailer").hide();		
+								$("#btn_delivery_submit").show();
+								
+								var url = "#page_del_item";	
+								$.mobile.navigate(url);
+								delivery_retailer_cmb_ob.selectmenu("refresh");
+								
+							}else{						
+								$("#msg_delivery_retailer").html('Server Error');	
+								$("#wait_image_delivery_retailer").hide();		
+								$("#btn_delivery_submit").show();						
+								}
+						}
+					  },
+				  error: function(result) {			  
+						$("#msg_delivery_retailer").html('Invalid Request');
+						$("#wait_image_delivery_retailer").hide();		
+						$("#btn_delivery_submit").show();
+				  }
+			 });//end ajax	
+	}
+	}
+}
+
+
 //================= visit log
 function get_visitlog(){
 		
@@ -637,7 +813,6 @@ function getSummaryReport(){
 					rpt_rep_val='ALL'
 					}
 				
-				$('#btn_report_summary').hide();
 				$('#wait_report_summary').show();
 				
 				//====== 
@@ -649,12 +824,10 @@ function getSummaryReport(){
 							if (result==''){
 								$("#error_report_summary").html('Sorry Network not available');												
 								$('#wait_report_summary').hide();
-								$('#btn_report_summary').show();
 								
 							}else if (result=='FAILED'){					
 								$("#error_report_summary").html('Unauthorized User');
 								$('#wait_report_summary').hide();
-								$('#btn_report_summary').show();
 							
 							}else{	
 									var resultRetArray = result.split('<rdrd>');
@@ -686,8 +859,7 @@ function getSummaryReport(){
 										
 										//==========
 										$("#report_visitdata").html(resultShow);
-										$('#wait_report_summary').hide();
-										$('#btn_report_summary').show();		
+										$('#wait_report_summary').hide();	
 										
 										//=====
 										var url = "#report_page";
@@ -697,8 +869,7 @@ function getSummaryReport(){
 							
 						},error: function(result) {	  
 						  $("#error_report_summary").html("Connectivity Error.Please Check Your Network Connection and Try Again");
-						  $('#wait_report_summary').hide();
-						  $('#btn_report_summary').show();						  
+						  $('#wait_report_summary').hide();					  
 					  }
 					  
 				  });//end ajax
@@ -706,7 +877,90 @@ function getSummaryReport(){
 			};
 	};
 }
-	
+
+//=============
+function getSalesSummaryReport(){		
+		$("#error_report_summary").html('');
+		$("#report_visitdata").html('');
+		
+		var rpt_rep_val=$( "#rpt_rep_id").val();
+		
+		var selected_period_rpt=($("input:radio[name='RadioPeriodRpt']:checked").val())	
+		if (selected_period_rpt=="" || selected_period_rpt==undefined){
+			$("#error_report_summary").html("Day Required");
+		}else{			
+			if (rpt_rep_val=="0"){
+				$("#error_report_summary").html('KAM Required');
+			}else{
+				
+				if (rpt_rep_val==undefined){
+					rpt_rep_val='ALL'
+					}
+				
+				$('#wait_report_summary').show();
+				
+				//====== 
+				$.ajax({
+					type: 'POST',
+					url: 'http://e.businesssolutionapps.com/gp/syncmobile/getSalesSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val,
+					//url: 'http://127.0.0.1:8000/gpmreporting/syncmobile/getSalesSummaryReport?cid='+localStorage.cid+'&cm_id='+localStorage.cm_id+'&cm_pass='+localStorage.cm_pass+'&synccode='+localStorage.synccode+'&period='+selected_period_rpt+'&kamid='+rpt_rep_val,
+					success: function(result) {								
+							if (result==''){
+								$("#error_report_summary").html('Sorry Network not available');												
+								$('#wait_report_summary').hide();
+								
+							}else if (result=='FAILED'){					
+								$("#error_report_summary").html('Unauthorized User');
+								$('#wait_report_summary').hide();
+							
+							}else{	
+									var resultRetArray = result.split('<rdrd>');
+									
+									if (resultRetArray.length==3){
+										var resultStrList = resultRetArray[2].split('<rd>');								
+										var resultStrListLength=resultStrList.length
+										
+										//var resultShow='<table width="100%" border="1" cellspacing="0" cellpadding="0" style="border-color:#EEEEEE;font-size:11px">'
+										var resultShow='<table class="ui-body-d ui-shadow table-stripe ui-responsive" data-role="table" data-theme="d"  data-mode="display:none" style="cell-spacing:0px; width:100%">'
+										
+										var totalQty=0
+										resultShow=resultShow+'<tr style="font-size:11px;background-color:#96CBCB;"><td ><b>Product</b></td><td ><b>Qty</b></td></tr>'	
+										for (var i=0; i < resultStrListLength; i++){
+											resultValArray = resultStrList[i].split('<fd>');
+											if(resultValArray[0]=='' || resultValArray[0]==undefined){
+												continue;
+												}
+																					
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td >'+resultValArray[0]+'</td><td >'+resultValArray[1]+'</td></tr>'
+											totalQty=totalQty+eval(resultValArray[1]);
+											
+										}
+										if (totalQty>0){
+											resultShow=resultShow+'<tr style="font-size:11px;background-color:#FFF;"><td ><b>Total</b></td><td ><b>'+totalQty+'</b></td></tr>'
+											}
+										
+										resultShow=resultShow+'</table>'
+										
+										//==========
+										$("#report_visitdata").html(resultShow);
+										$('#wait_report_summary').hide();	
+										
+										//=====
+										var url = "#report_page";
+										$.mobile.navigate(url);
+								}
+							};
+							
+						},error: function(result) {	  
+						  $("#error_report_summary").html("Connectivity Error.Please Check Your Network Connection and Try Again");
+						  $('#wait_report_summary').hide();					  
+					  }
+					  
+				  });//end ajax
+			  
+			};
+	};
+}
 
 //=============
 function change_password(){		
